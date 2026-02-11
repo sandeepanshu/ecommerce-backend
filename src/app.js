@@ -2,10 +2,18 @@ const express = require("express");
 const connectDB = require("./config/db");
 const { PORT } = require("./config/env");
 const errorMiddleware = require("./middlewares/error.middleware");
+const cors = require("cors");
 
 connectDB();
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth.routes"));
