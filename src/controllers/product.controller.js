@@ -14,25 +14,26 @@ exports.createProduct = async (req, res, next) => {
       crt,
       price,
       stock,
-      image,
     } = req.body;
 
     if (
       !title ||
       !category ||
-      !mrp ||
-      !distributorRate ||
-      !retailerPrice ||
+      mrp == null ||
+      distributorRate == null ||
+      retailerPrice == null ||
       !uomUnit ||
-      !uom ||
-      !crt ||
-      !price ||
-      !stock
+      uom == null ||
+      crt == null ||
+      price == null ||
+      stock == null
     ) {
       const error = new Error("All required fields must be provided");
       error.statusCode = 400;
       throw error;
     }
+
+    const image = req.file ? req.file.filename : null;
 
     const product = await Product.create({
       title,
@@ -91,12 +92,17 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
-// ✅ Update Product
 exports.updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findByIdAndUpdate(id, req.body, {
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      updateData.image = req.file.filename;
+    }
+
+    const product = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });

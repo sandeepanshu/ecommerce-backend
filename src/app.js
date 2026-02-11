@@ -15,11 +15,13 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/products", require("./routes/product.routes"));
 app.use("/api/cart", require("./routes/cart.routes"));
 app.use("/api/orders", require("./routes/order.routes"));
+app.use("/uploads", express.static("uploads"));
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: "Route not found" });

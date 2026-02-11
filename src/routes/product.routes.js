@@ -8,9 +8,11 @@ const {
   deleteProduct,
 } = require("../controllers/product.controller");
 
-router.post("/", createProduct);
+const upload = require("../middlewares/upload.middleware");
+
+router.post("/", upload.single("image"), createProduct);
 router.get("/", getProducts);
-router.put("/:id", updateProduct);
+router.put("/:id", upload.single("image"), updateProduct);
 router.delete("/:id", deleteProduct);
 
 module.exports = router;
